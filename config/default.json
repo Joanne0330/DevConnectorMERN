@@ -1,3 +1,4 @@
 {
- "mongoURI": "mongodb+srv://Joanne0330:Allegro0330@devconnector.hcnin.mongodb.net/DevConnector?retryWrites=true&w=majority"
+ "mongoURI": "mongodb+srv://Joanne0330:Allegro0330@devconnector.hcnin.mongodb.net/DevConnector?retryWrites=true&w=majority",
+ "jwtSecret": "mysecrettoken"
 }
