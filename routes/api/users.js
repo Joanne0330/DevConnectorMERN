@@ -56,7 +56,7 @@ async (req, res) => {
 
         await user.save(); //save the user with encrypted password
         
-        const payload = { //Returning json webtoken
+        const payload = { //creating json webtoken
             user: {
                 id: user.id
             }
@@ -68,7 +68,7 @@ async (req, res) => {
             { expiresIn: 360000 },
             (err, token) => {
                 if(err) throw err;
-                res.json({ token });
+                res.json({ token }); //returning json webtoken
             });
     
     } catch(err) {
