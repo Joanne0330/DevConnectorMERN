@@ -9,6 +9,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../../models/User');
 
+// Signing up a new user
 //@route          POST api/users
 //@description    Register user
 //@access         Public
@@ -34,7 +35,7 @@ async (req, res) => {
         let user = await User.findOne({ email }); // Find the user via email
 
         if(user) { // if user(email) already exist...
-            return res.status(400).json({ errors: [ {msg: 'User already exist!'} ] });
+            return res.status(400).json({ errors: [{ msg: 'User already exist!' }] });
         }
         
         const avatar = gravatar.url(email, {//if user not found, pass user's email to grab the url of the gravatar
