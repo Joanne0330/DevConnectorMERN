@@ -22,7 +22,7 @@ router.get('/', auth, async (req, res) => {
 
 });
 
-// Validating a user for session
+// Validating a returning user for session
 //@route          POST api/auth
 //@description    Authenticate user and get token
 //@access         Public
