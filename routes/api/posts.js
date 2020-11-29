@@ -101,7 +101,7 @@ router.delete('/:id', auth, async (req, res) => {
         res.json({ msg: 'Post removed!' });
     } catch (err) {
         console.error(err.message);
-        
+
         if(err.kind === 'ObjectId') {  //if the kind of error is due to the incorrectly formatted id
             return res.status(404).json({ msg: 'Post not found!'}); 
         }
@@ -109,4 +109,59 @@ router.delete('/:id', auth, async (req, res) => {
     }
 });
 
+
+//@route     PUT api/posts/like/:id  liking a post is more like an update, also needs to include the id of the post in order to add the likes
+//@desc      Like a post
+//@access    Private
+router.put('/like/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id); //find the post by its id
+
+        //check if the post has already been liked
+        if(post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+            //iterate through the likes array to try and find any liked user (in string format) that matches req.user.id, 
+            //if it exists, we count how many and if it's greater than 0
+            return res.status(400).json({ msg: 'Post already liked!' });
+        }
+
+        post.likes.unshift({ user: req.user.id }); //add the user and user id at the beginning of the array
+        
+        await post.save();
+
+        res.json(post.likes);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error!');
+    }
+
+});
+
+//@route     PUT api/posts/unlike/:id  
+//@desc      Unlike a post
+//@access    Private
+router.put('/unlike/:id', auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id); //find the post by its id
+
+        //check if the post has already been liked
+        if(post.likes.filter(like => like.user.toString() === req.user.id).length === 0) {
+            //iterate through the likes array to try and find any liked user (in string format) that matches req.user.id, 
+            //if it does not exist because it's equal to 0, it has not been liked therefore you cannot unlike
+            return res.status(400).json({ msg: 'Post has not yet been liked!' });
+        }
+
+        const removeIndex = post.likes.map(like => like.user.toString()).indexOf(req.user.id);
+        // map through the likes array, find the index of the like (in string format) that matches req.user's id
+        
+        post.likes.splice(removeIndex, 1); //splice the particular index
+        
+        await post.save();
+
+        res.json(post.likes);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error!');
+    }
+
+});
 module.exports = router;
