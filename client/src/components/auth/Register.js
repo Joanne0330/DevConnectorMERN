@@ -1,4 +1,6 @@
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
+// import axios from 'axios';    if we don't use Redux, then will need to have axios to send info from here
 
 export const Register = () => {
     const [formData, setFormData] = useState({
@@ -13,12 +15,36 @@ export const Register = () => {
     const onChange = e => 
         setFormData({ ...formData, [e.target.name]: e.target.value }); // to setState, take the preset formData, spread out and place the value to the [key]
 
-    const onSubmit = e => {
+    const onSubmit = async e => {  //async b/c sending info to the back-end
         e.preventDefault();
         if(password !== password2) {  
             console.log('Passwords to not match!');
         } else {
-            console.log(formData);
+            console.log(formData) //will give you the new version of name: "Joanne", password: "123456" etc
+
+            //THE FOLLOWING IS FOR SENDING INFO TO BACKEND W/OUT USING REDUX
+
+            // const newUser = {    //create newUser obj from the formData
+            //     name,  //setting key and value, same as name: name
+            //     email,
+            //     password
+            // }
+
+            // try {
+            //     const config = {    //sending data so we have to have config obj with hearders obj
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         }
+            //     }
+
+            //     const body = JSON.stringify(newUser);    //turning newUswer obj to JSON format
+
+            //     const res = await axios.post('/api/users', body, config);    //send everything by using the route enabled by the proxy from package.json, then assign the response
+            //     console.log(res.data);  //the data of the response from the back-end should be the token
+
+            // } catch (err) {
+            //     console.error(err.response.data);
+            // }
         }
     }
     return (
@@ -78,9 +104,9 @@ export const Register = () => {
                 </form>
                 <p className="my-1">
                     Already have an account?   
-                    <a href="login.html">
+                    <Link to='/login'>
                         Sign In
-                    </a>
+                    </Link>
                 </p>
         </Fragment>
     )
