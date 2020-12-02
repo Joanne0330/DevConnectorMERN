@@ -1,8 +1,12 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux'; //READ bottom! Connecting this component to Redux
 import { Link } from 'react-router-dom';
+import { setAlert } from '../../actions/alert';  //bringing the action 
+import PropTypes from 'prop-types'; //READ bottom! this is for the Alert props in the layout so client can see the Alert component
+
 // import axios from 'axios';    if we don't use Redux, then will need to have axios to send info from here
 
-export const Register = () => {
+export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAlert, passed down from action
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -18,7 +22,7 @@ export const Register = () => {
     const onSubmit = async e => {  //async b/c sending info to the back-end
         e.preventDefault();
         if(password !== password2) {  
-            console.log('Passwords to not match!');
+            setAlert('Passwords to not match!', 'danger'); //props.setAlert is passing msg, type(danger for alert-danger in CSS) to action and generate an id
         } else {
             console.log(formData) //will give you the new version of name: "Joanne", password: "123456" etc
 
@@ -112,4 +116,13 @@ export const Register = () => {
     )
 };
 
-export default Register;
+Register.propTypes = {
+    setAlert: PropTypes.func.isRequired
+}
+
+export default connect(null, { setAlert })(Register);
+//connecting action to Register component, action must be passed into connect
+// 1st Parameter is the State you wish to map, which is null
+// 2s Parameter is the obj you want to use, which is the action we're bringing.
+// setAlert allows props.setAlert
+
