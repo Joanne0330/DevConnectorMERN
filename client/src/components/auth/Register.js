@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux'; //READ bottom! Connecting this component to Redux
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';  //bringing the alert action 
 import { register } from '../../actions/auth'; //bring the auth action
 import PropTypes from 'prop-types'; //READ bottom! this is for the Alert props in the layout so client can see the Alert component
 
 // import axios from 'axios';    if we don't use Redux, then will need to have axios to send info from here
 
-export const Register = ({ setAlert, register }) => {   // this {setAlert} is props.setAlert, passed down from action
+export const Register = ({ setAlert, register, isAuthenticated }) => {   // this {setAlert} is props.setAlert, passed down from action
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -53,7 +53,12 @@ export const Register = ({ setAlert, register }) => {   // this {setAlert} is pr
             //     console.error(err.response.data);
             // }
         }
+    };
+
+    if(isAuthenticated) {
+        return <Redirect to='/dashboard' />
     }
+
     return (
         <Fragment>
             <h1 className="large text-primary">Sign Up</h1>
@@ -120,13 +125,19 @@ export const Register = ({ setAlert, register }) => {   // this {setAlert} is pr
 };
 
 Register.propTypes = {
-    setAlert: PropTypes.func.isRequired,
-    register: PropTypes.func.isRequired
-}
+    setAlert: PropTypes.func.isRequired,  //these are the connected actions and state
+    register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+};
 
-export default connect(null, { setAlert, register })(Register);
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated //getting auth state from root and find initialState.isAuthenticated
+});
+
+
+export default connect(mapStateToProps, { setAlert, register })(Register);
 //connecting action to Register component, action must be passed into connect
-// 1st Parameter is the State you wish to map, which is null
+// 1st Parameter is the State you wish to map
 // 2s Parameter is the obj you want to use, which is the action we're bringing.
 // setAlert allows props.setAlert and register allows props.register
 

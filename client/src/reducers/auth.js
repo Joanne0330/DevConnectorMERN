@@ -1,4 +1,11 @@
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR } from '../actions/types';
+import { 
+    REGISTER_SUCCESS, 
+    REGISTER_FAIL, 
+    USER_LOADED, 
+    AUTH_ERROR,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL 
+} from '../actions/types';
 
 //state for authentication: 
 const initialState = {  //initial state is an obj to store the token we recieve and place in a local storage
@@ -22,6 +29,7 @@ export default function(state = initialState, action) {
             };
 
         case REGISTER_SUCCESS:    //after registration, user is logged in therefore we need the token now
+        case LOGIN_SUCCESS:    
             localStorage.setItem('token', payload.token); // set the token (the payload obj from back-end) inside localStorage
             return {
                 ...state,  //spread out the initial state and payload from the back
@@ -32,7 +40,8 @@ export default function(state = initialState, action) {
 
         case REGISTER_FAIL:
         case AUTH_ERROR:
-            localStorage.removItem('token'); //remove antying in localStorage
+        case LOGIN_FAIL:
+            localStorage.removeItem('token'); //remove antying in localStorage
             return {
                 ...state,
                 token: null,  //setting to null for complete removal

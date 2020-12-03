@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../../actions/auth';
 
-export const Login = () => {
+
+export const Login = ({ login, isAuthenticated }) => {  //props of the login action (destructured props.login) and the state
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -14,8 +18,13 @@ export const Login = () => {
 
     const onSubmit = async e => {  //async b/c sending info to the back-end
         e.preventDefault();
-        console.log('Sucess!'); 
+        login(email, password); //calling the props.login action to pass on the info to the action 
     };
+
+    //Redirect if logged in
+    if(isAuthenticated) {
+        return <Redirect to='/dashboard' />
+    }
 
     return (
         <Fragment>
@@ -58,4 +67,15 @@ export const Login = () => {
     )
 };
 
-export default Login;
+Login.propTypes = {
+    login: PropTypes.func.isRequired,  //login action 
+    isAuthenticated: PropTypes.bool  //from initialState, true or null
+}
+
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated //getting auth state from root and find initialState.isAuthenticated
+});
+
+
+export default connect(mapStateToProps, { login })(Login);  //bring the state and login action
