@@ -1,8 +1,39 @@
 import axios from 'axios';
 import { setAlert } from './alert';  //bring the alert action if registration fails
-import { REGISTER_SUCCESS, REGISTER_FAIL } from './types';
+import { 
+    REGISTER_SUCCESS, 
+    REGISTER_FAIL, 
+    USER_LOADED, 
+    AUTH_ERROR 
+} from './types';
+import setAuthToken from '../utils/setAuthToken';  // a file that find the token in localStorage and sets in global headers
 
-//Register User (using axios to send register obj and async await)
+
+// @Load User: 
+// after getting the token, send to the back for varification
+export const loadUser = () => async dispatch => {
+    if(localStorage.token) { //if window.localStorage from reducer has the token
+        setAuthToken(localStorage.token);  //use the setAuthToken function to set to global headers
+    }
+
+    try {  //headers is set, now make request to the back
+        const res = await axios.get('/api/auth');
+
+        dispatch({
+            type: USER_LOADED,
+            payload: res.data  //data from the back is the user (id, name, email, avatar)
+        })
+    } catch (err) {
+
+        dispatch({
+            type: AUTH_ERROR
+        });      
+    }
+};
+
+
+// @Register User: 
+// (using axios to send register obj and async await)
 export const register = ({ name, email, password }) => async dispatch => { //similar to post request if done in the component
     const config ={
         headers: {

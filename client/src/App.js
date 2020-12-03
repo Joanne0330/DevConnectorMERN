@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';  //useEffect works like componentWillMount in hooks
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
@@ -9,26 +9,42 @@ import Alert from './components/layout/Alert';
 //Redux
 import {Provider} from 'react-redux'; //to combine React and Redux
 import store from './store'; //all the Redux middleware setup
+import { loadUser } from './actions/auth';
+import setAuthToken from './utils/setAuthToken';
 
+// CSS
 import './App.css';
 
-const App = () => (
-  <Provider store={store}>  
-    <Router>
-      <Fragment>  
-        <Navbar />
-        <Route exact path='/' component={Landing} />
-        <section className="container">
-          <Alert />
-          <Switch>
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-          </Switch>
-        </section>
-      </Fragment>
-    </Router>
-  </Provider>
-);
+
+if(localStorage.token) {  //before loading, check if there's token in window.localStorage
+  setAuthToken(localStorage.token); //then set it in the global headers
+}
+
+
+const App = () => {  
+
+  useEffect(() => {  
+    store.dispatch(loadUser());  //using the store to use loadUser func to send tokens to the back and get the user info to the front
+  }, []);        //[] is to ensure this runs only once, mount and unmount                    
+
+  return (
+    <Provider store={store}>  
+      <Router>
+        <Fragment>  
+          <Navbar />
+          <Route exact path='/' component={Landing} />
+          <section className="container">
+            <Alert />
+            <Switch>
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+            </Switch>
+          </section>
+        </Fragment>
+      </Router>
+    </Provider>
+  )
+};
 
 
 export default App;
