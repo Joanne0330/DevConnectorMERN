@@ -6,12 +6,13 @@ import {
     USER_LOADED, 
     AUTH_ERROR,
     LOGIN_SUCCESS,
-    LOGIN_FAIL 
+    LOGIN_FAIL, 
+    LOGOUT 
 } from './types';
 import setAuthToken from '../utils/setAuthToken';  // a file that find the token in localStorage and sets in global headers
 
 
-// @Load User: 
+// **Load User: 
 // after getting the token, send to the back for varification
 export const loadUser = () => async dispatch => {
     if(localStorage.token) { //if window.localStorage from reducer has the token
@@ -34,7 +35,7 @@ export const loadUser = () => async dispatch => {
 };
 
 
-// @Register User: 
+// **Register User: 
 // (using axios to send register obj and async await)
 export const register = ({ name, email, password }) => async dispatch => { //similar to post request if done in the component
     const config ={
@@ -68,7 +69,7 @@ export const register = ({ name, email, password }) => async dispatch => { //sim
     }
 };
 
-// @Login User: 
+// **Login User: 
 // (using axios to send login info and async await)
 export const login = (email, password) => async dispatch => { 
     const config ={
@@ -101,3 +102,10 @@ export const login = (email, password) => async dispatch => {
         });
     }
 };
+
+//** Logout /Clear Profile
+export const logout = () => dispatch => {
+    dispatch({ 
+        type: LOGOUT 
+    });
+}

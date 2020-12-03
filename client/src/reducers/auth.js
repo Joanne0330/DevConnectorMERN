@@ -4,7 +4,8 @@ import {
     USER_LOADED, 
     AUTH_ERROR,
     LOGIN_SUCCESS,
-    LOGIN_FAIL 
+    LOGIN_FAIL, 
+    LOGOUT
 } from '../actions/types';
 
 //state for authentication: 
@@ -38,9 +39,10 @@ export default function(state = initialState, action) {
                 loading: false
             };
 
-        case REGISTER_FAIL:
+        case REGISTER_FAIL:   //get rid of everything, token, and return to the initialState of empty array
         case AUTH_ERROR:
         case LOGIN_FAIL:
+        case LOGOUT: 
             localStorage.removeItem('token'); //remove antying in localStorage
             return {
                 ...state,
