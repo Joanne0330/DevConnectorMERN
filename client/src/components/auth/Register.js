@@ -1,12 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux'; //READ bottom! Connecting this component to Redux
 import { Link } from 'react-router-dom';
-import { setAlert } from '../../actions/alert';  //bringing the action 
+import { setAlert } from '../../actions/alert';  //bringing the alert action 
+import { register } from '../../actions/auth'; //bring the auth action
 import PropTypes from 'prop-types'; //READ bottom! this is for the Alert props in the layout so client can see the Alert component
 
 // import axios from 'axios';    if we don't use Redux, then will need to have axios to send info from here
 
-export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAlert, passed down from action
+export const Register = ({ setAlert, register }) => {   // this {setAlert} is props.setAlert, passed down from action
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -24,7 +25,9 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
         if(password !== password2) {  
             setAlert('Passwords to not match!', 'danger'); //props.setAlert is passing msg, type(danger for alert-danger in CSS) to action and generate an id
         } else {
-            console.log(formData) //will give you the new version of name: "Joanne", password: "123456" etc
+            // console.log(formData) //will give you the new version of name: "Joanne", password: "123456" etc
+        
+            register({ name, email, password });  //passing the info from formData to props.register
 
             //THE FOLLOWING IS FOR SENDING INFO TO BACKEND W/OUT USING REDUX
 
@@ -63,7 +66,7 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
                             name="name"  //value of the "name" that attribute when setFormData, ex: [e.target.name] is name
                             value={name}   //remember to add the value of the input for onChange handler
                             onChange={e => onChange(e)}
-                            required 
+                            // required 
                         />
                     </div>
                      <div className="form-group">
@@ -73,7 +76,7 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
                             name="email"  // [e.target.name] is email
                             value={email}
                             onChange={e => onChange(e)}
-                            required
+                            // required
                         />
                         <small className="form-text">
                             This site uses Gravatar so if you want a profile image, use a
@@ -87,7 +90,7 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
                             name="password"  //[e.target.name] is password
                             value={password}
                             onChange={e => onChange(e)}
-                            minLength="6"
+                            // minLength="6"
                         />
                     </div>
                      <div className="form-group">
@@ -97,7 +100,7 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
                             name="password2"
                             value={password2}
                             onChange={e => onChange(e)}
-                            minLength="6"
+                            // minLength="6"
                         />
                     </div>
                     <input 
@@ -117,12 +120,13 @@ export const Register = ({ setAlert }) => {   // this {setAlert} is props.setAle
 };
 
 Register.propTypes = {
-    setAlert: PropTypes.func.isRequired
+    setAlert: PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired
 }
 
-export default connect(null, { setAlert })(Register);
+export default connect(null, { setAlert, register })(Register);
 //connecting action to Register component, action must be passed into connect
 // 1st Parameter is the State you wish to map, which is null
 // 2s Parameter is the obj you want to use, which is the action we're bringing.
-// setAlert allows props.setAlert
+// setAlert allows props.setAlert and register allows props.register
 
