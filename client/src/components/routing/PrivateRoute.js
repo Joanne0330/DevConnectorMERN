@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';  //to interact with auth state, to ensure
 
 
-const PrivateRoute = ({   //component: is a props passed in from routes in main App.js
-    component: Component, 
+const PrivateRoute = ({ 
+    component: Component, //ex: passing in Dashboard component here to be rendered like component={Dashboard} or render={<Dashboard />} if granted
     auth: { isAuthenticated, loading }, 
-    ...rest 
+    ...rest              //ex: exact path="/dashboard" from App.js
 }) => ( 
     <Route 
         {...rest} 
@@ -21,7 +21,7 @@ const PrivateRoute = ({   //component: is a props passed in from routes in main 
     />
 );
 //any custom props are passed in are in {...rest} now set in <Route />, if 'props' passed in is NOT Authenticaticated nor loading,
-//we redirect, otherwise we render the Component with rest of the props passed in
+//we redirect, otherwise we render the intended Component (ex: Dashboard) with rest of the props passed in
 
 PrivateRoute.propTypes = {
     auth: PropTypes.object.isRequired
