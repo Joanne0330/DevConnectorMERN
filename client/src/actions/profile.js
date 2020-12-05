@@ -25,3 +25,40 @@ export const getCurrentProfile = () => async dispatch => {
         });
     }
 };
+
+//Create and update profile
+export const createProfile = (formData, history, edit = false ) => async dispatch => { //history will rediect to client side route
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const res = await axios.post('/api/profile', formData, config);
+
+        dispatch({ //after posting the info, we use get profile to see the new or updated info
+            type: GET_PROFILE,
+            payload: res.data   
+        });
+
+        // after getting the profile, we update a message in the alert with the following messages:
+        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created'), 'success' ); //positive alert messages with success as a type to turn the alert green
+
+        if(!edit) {  //if creating the profile, then we'll redirect to dashborad
+            history.push('/dashboard');
+        }
+        
+    } catch (err) {
+        const errors = err.response.data.errors; // getting the response from the err array
+
+        if(errors) {  //if errors, calling the setAlert action using the errors array we have in the backend
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger'))); //passing in the error message(s) from the backend and the type to setAlert
+        }
+
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }  //the err msg and err status are from back end
+        });
+    }
+}
