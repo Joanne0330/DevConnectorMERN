@@ -1,11 +1,16 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom'; //withRouter is for the redirect of the history
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { createProfile } from '../../actions/profile';
+import { createProfile, getCurrentProfile } from '../../actions/profile'; // need both get and post actions
 
 
-const CreateProfile = ({ createProfile, history }) => {  //calleding the action, and history ('/dashboard) from the action
+const EditProfile = ({ 
+    profile: { profile, loading }, 
+    createProfile, 
+    getCurrentProfile, 
+    history                //history ('/dashboard) from the createProfile action
+}) => {  
     const [formData, setFormdData] = useState({
         company: '',
         website: '',
@@ -23,6 +28,28 @@ const CreateProfile = ({ createProfile, history }) => {  //calleding the action,
 
     //to onClick to change the state to true, then user can see the input fields for social media
     const [displaySocialInputs, toggleSocialInputs] = useState(false);  
+
+    useEffect(() => {   //mounting the profile info that are already there
+        getCurrentProfile();   
+
+        // now we set the form in current 'value' b/c not all fields are previously filled
+        setFormdData({
+            company: loading || !profile.company ? '' : profile.company,
+            website: loading || !profile.website ? '' : profile.website,
+            location: loading || !profile.location ? '' : profile.location,
+            status: loading || !profile.status ? '' : profile.status,
+            skills: loading || !profile.skills ? '' : profile.skills.join(','),
+            githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
+            bio: loading || !profile.bio ? '' : profile.bio,
+            twitter: loading || !profile.social ? '' : profile.social.twitter,
+            facebook: loading || !profile.social ? '' : profile.social.facebook,
+            linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+            youtube: loading || !profile.social ? '' : profile.social.youtube,
+            instagram: loading || !profile.social ? '' : profile.social.instagram,
+
+        })
+
+    }, [loading]); //loading is the condition. only mount this once when it's loading
 
     const {
         company,
@@ -43,7 +70,7 @@ const CreateProfile = ({ createProfile, history }) => {  //calleding the action,
 
     const onSubmit = e => {
         e.preventDefault();
-        createProfile(formData, history)
+        createProfile(formData, history, true); //changing the edit to false so it wont redirect to dashboard
     }
 
     return (
@@ -205,9 +232,14 @@ const CreateProfile = ({ createProfile, history }) => {  //calleding the action,
     );
 };
 
-CreateProfile.propTypes = {
-    createProfile: PropTypes.func.isRequired
+EditProfile.propTypes = {
+    createProfile: PropTypes.func.isRequired,
+    getCurrentProfile: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
 }
 
+const mapStateToProps = state => ({
+    profile: state.profile
+});
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));  //using withRouter for history obj which as '/dashboard' from the action
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(EditProfile));  //using withRouter for history obj which as '/dashboard' from the action
