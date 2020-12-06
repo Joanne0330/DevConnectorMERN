@@ -4,7 +4,9 @@ import { setAlert } from './alert';  //if there's an error, use setAlert in aler
 import {
     GET_PROFILE,
     PROFILE_ERROR,
-    UPDATE_PROFILE
+    UPDATE_PROFILE,
+    CLEAR_PROFILE,
+    ACCOUNT_DELETED
 } from './types';
 
 // ** Get current users profile
@@ -135,3 +137,66 @@ export const addEducation = (formData, history) => async dispatch => {  //taking
         });
     }
 };
+
+
+// ** Delete an experience
+export const deleteExperience = id => async dispatch => {
+    try {
+        const res = await axios.delete(`/api/profile/experience/${id}`);
+
+        dispatch({
+            type: UPDATE_PROFILE,
+            payload: res.data
+        });
+
+        dispatch(setAlert('Experience Removed', 'success' ));
+
+    } catch (err) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }  //the err msg and err status are from back end
+        });
+    }
+};
+
+// ** Delete an education
+export const deleteEducation = id => async dispatch => {
+    try {
+        const res = await axios.delete(`/api/profile/education/${id}`);
+
+        dispatch({
+            type: UPDATE_PROFILE,
+            payload: res.data
+        });
+
+        dispatch(setAlert('Education Removed', 'success' ));
+
+    } catch (err) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }  //the err msg and err status are from back end
+        });
+    }
+};
+
+// ** Delete the account
+export const deleteAccount = () => async dispatch => { //don't need id, because it knows the token
+    if(window.confirm('Are you sure? This can NOT be undone!')) {  //use window to give alarm
+        try {
+            await axios.delete('/api/profile');
+    
+            dispatch({ type: CLEAR_PROFILE });
+            dispatch({ type: ACCOUNT_DELETED });  // dispatch in the auth reducer, same as LOGOUT
+
+            dispatch(setAlert('You account has been permanently deleted'));
+    
+        } catch (err) {
+            dispatch({
+                type: PROFILE_ERROR,
+                payload: { msg: err.response.statusText, status: err.response.status }  //the err msg and err status are from back end
+            });
+        }
+    }
+};
+
+
