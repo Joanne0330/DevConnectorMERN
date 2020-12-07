@@ -47,9 +47,8 @@ const EditProfile = ({
             youtube: loading || !profile.social ? '' : profile.social.youtube,
             instagram: loading || !profile.social ? '' : profile.social.instagram,
 
-        })
-
-    }, [loading]); //loading is the condition. only mount this once when it's loading
+        });
+    }, [loading, getCurrentProfile]); //loading is the condition. only mount this once when it's loading
 
     const {
         company,

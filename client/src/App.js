@@ -11,6 +11,7 @@ import EditProfile from './components/profile-forms/EditProfile';
 import AddExperience from './components/profile-forms/AddExperience';
 import AddEducation from './components/profile-forms/AddEducation';
 import Profiles from './components/profiles/Profiles';
+import Profile from './components/profile/Profile';
 import PrivateRoute from './components/routing/PrivateRoute';
 
 //Redux
@@ -23,14 +24,15 @@ import setAuthToken from './utils/setAuthToken';
 import './App.css';
 
 
-if(localStorage.token) {  //before loading, check if there's token in window.localStorage
-  setAuthToken(localStorage.token); //then set it in the global headers
-}
 
 
 const App = () => {  
-
+  
   useEffect(() => {  
+    if(localStorage.token) {  //before loading, check if there's token in window.localStorage
+      setAuthToken(localStorage.token); //then set it in the global headers
+    }
+
     store.dispatch(loadUser());  //using the store to use loadUser func to send tokens to the back and get the user info to the front
   }, []);        //[] is to ensure this runs only once, mount and unmount                    
 
@@ -46,6 +48,7 @@ const App = () => {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/profiles" component={Profiles} />
+              <Route exact path="/profile/:id" component={Profile} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/create-profile" component={CreateProfile} />
               <PrivateRoute exact path="/edit-profile" component={EditProfile} />

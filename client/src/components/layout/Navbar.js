@@ -35,9 +35,6 @@ export const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
                 </Link>
             </li>
             <li>
-                <a href="#!">Developers</a>
-            </li>
-            <li>
                 <Link to='/register'>Register</Link>
             </li>
             <li>

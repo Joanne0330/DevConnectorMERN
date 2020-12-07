@@ -17,7 +17,7 @@ const Dashboard = ({
 }) => { 
     useEffect(() => {   //like willMount and dismount with the action passed in
         getCurrentProfile();   //sent the action only once
-    }, []);
+    }, [getCurrentProfile]);
 
     return loading && profile === null ? (
         <Spinner />
