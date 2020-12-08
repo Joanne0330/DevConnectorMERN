@@ -38,7 +38,8 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 error: payload, //the err msg and err status
-                loading: false
+                loading: false,
+                profile: null
             };   
         case CLEAR_PROFILE: //from auth action
             return {
