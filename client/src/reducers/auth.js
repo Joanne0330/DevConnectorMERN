@@ -43,16 +43,23 @@ export default function(state = initialState, action) {
         case REGISTER_FAIL:   //get rid of everything, token, and return to the initialState of empty array
         case AUTH_ERROR:
         case LOGIN_FAIL:
-        case LOGOUT: 
         case ACCOUNT_DELETED:
             localStorage.removeItem('token'); //remove antying in localStorage
             return {
                 ...state,
                 token: null,  //setting to null for complete removal
                 isAuthenticated: false,
-                loading: false   //done loading even it failed
-            };    
-
+                loading: false,   //done loading even it failed
+                user: null
+            };       
+        case LOGOUT: 
+            return {
+                ...state,
+                token: null,
+                isAuthenticated: false,
+                loading: false,
+                user: null
+            };
         default:
             return state; 
     }

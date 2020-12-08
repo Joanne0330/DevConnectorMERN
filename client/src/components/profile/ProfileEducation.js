@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 
-const ProfileEducation = ({ //experience is an array, but destructure the same way
+const ProfileEducation = ({//experience is an array, but destructure the same way
     education: { school, degree, fieldofstudy, current, to, from, description }
 }) => {
     return (
@@ -26,7 +26,7 @@ const ProfileEducation = ({ //experience is an array, but destructure the same w
 }
 
 ProfileEducation.propTypes = {
-    education: PropTypes.array.isRequired,
+    education: PropTypes.object.isRequired,
 }
 
 export default ProfileEducation;

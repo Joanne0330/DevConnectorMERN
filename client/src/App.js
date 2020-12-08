@@ -29,10 +29,10 @@ import './App.css';
 const App = () => {  
   
   useEffect(() => {  
+    
     if(localStorage.token) {  //before loading, check if there's token in window.localStorage
       setAuthToken(localStorage.token); //then set it in the global headers
     }
-
     store.dispatch(loadUser());  //using the store to use loadUser func to send tokens to the back and get the user info to the front
   }, []);        //[] is to ensure this runs only once, mount and unmount                    
 
