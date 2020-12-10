@@ -21,7 +21,7 @@ const PostItem = (
             comments, 
             date
         },
-        showActions //is set true by default
+        showActions //is set true by default, as a property
     }) => {
     return (
         <div className="post bg-white p-1 my-1">
